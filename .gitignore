@@ -1,0 +1,8 @@
+# Rust / Cargo
+target/
+**/*.rs.bk
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
