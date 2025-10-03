@@ -1,0 +1,10 @@
+/home/volt/proyectos/Project_58/db_lib/target/debug/deps/libpostgres_types-0e71696da26c9202.rmeta: /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/lib.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/chrono_04.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/pg_lsn.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/private.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/special.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/type_gen.rs
+
+/home/volt/proyectos/Project_58/db_lib/target/debug/deps/postgres_types-0e71696da26c9202.d: /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/lib.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/chrono_04.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/pg_lsn.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/private.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/special.rs /home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/type_gen.rs
+
+/home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/lib.rs:
+/home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/chrono_04.rs:
+/home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/pg_lsn.rs:
+/home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/private.rs:
+/home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/special.rs:
+/home/volt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/postgres-types-0.2.10/src/type_gen.rs:
