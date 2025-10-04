@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 
 const DATA_SERVICE: &str = "http://127.0.0.1:9000";
-const LOGIN: &str = "http://127.0.0.1:9002";
+const AUTH: &str = "http://127.0.0.1:9002";
 
 const SECRET0: &[u8] = b"CARLITOSCARLANGASXD";
 
@@ -42,7 +42,7 @@ async fn login(req: HttpRequest, body: String) -> impl Responder {
     let client = Client::new();
 
     let resp = client
-        .post(format!("{}/login", LOGIN))
+        .post(format!("{}/login", AUTH))
         .header("Content-Type", "application/json")
         .body(body)
         .send()
@@ -82,6 +82,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(Cors::permissive())
+            .service(login)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

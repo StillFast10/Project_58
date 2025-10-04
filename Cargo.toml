@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "apigateway",
+    "auth_service",
+    "db_lib",
+]

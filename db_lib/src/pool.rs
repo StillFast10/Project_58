@@ -1,5 +1,5 @@
 use tokio_postgres::{NoTls};
-use deadpool_postgres::{Client, Config, Pool};
+use deadpool_postgres::{Client, Config, Pool, ManagerConfig, RecyclingMethod};
 use serde::Serialize;
 use crate::error::DbError;
 
@@ -15,11 +15,12 @@ pub struct DbConfig {
 impl DbConfig{
     pub fn create_pool(config: DbConfig) -> Result<Pool, DbError>{
         let mut cfg = Config::new();
-
         cfg.dbname = Some(config.db_name.to_string());
         cfg.user = Some(config.user.to_string());
         cfg.password = Some(config.password.to_string());
         cfg.host = Some(config.host.to_string());
+        cfg.manager = Some(ManagerConfig {
+            recycling_method: RecyclingMethod::Fast,});
 
         match cfg.create_pool(None, NoTls){
             Ok(pool) => {
@@ -32,3 +33,5 @@ impl DbConfig{
         }
     }
 }
+
+

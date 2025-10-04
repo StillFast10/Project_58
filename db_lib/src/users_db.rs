@@ -72,10 +72,8 @@ pub struct UsersList{
     pub cantidad_usuarios: usize,
 }
 
-pub async fn insert_user(usuario: NewUser, pool: &Pool) -> Result<UserDB, DbError>{
+pub async fn insert_user(usuario: NewUser, cliente: &Client) -> Result<UserDB, DbError>{
     //Esta funcion inserta un usuario en la base de datos y retorna un UserDB uwu
-
-    let cliente = pool.get().await?;
 
     let row = cliente
         .query_one("INSERT INTO users (nombre, edad, genero, grado, dni, password, email)
@@ -110,8 +108,7 @@ pub async fn insert_user(usuario: NewUser, pool: &Pool) -> Result<UserDB, DbErro
 }
 
 
-pub async fn delete_user(user_id: i32, pool: &Pool) -> Result<bool, DbError>{
-    let cliente = pool.get().await?;
+pub async fn delete_user(user_id: i32, cliente: &Client) -> Result<bool, DbError>{
 
     let rows_afectadas = cliente
         .execute("DELETE FROM users WHERE id = $1", &[&user_id])
@@ -126,8 +123,29 @@ pub async fn delete_user(user_id: i32, pool: &Pool) -> Result<bool, DbError>{
 }
 
 
-pub async fn get_user(user_id: i32, pool: &Pool) -> Result<UserDB, DbError>{
-    let cliente = pool.get().await?;
+pub async fn get_user_by_email(email: &str, cliente: &Client) -> Result<UserDB, DbError>{
+    let row = cliente
+        .query_one("SELECT id, nombre, edad, genero, grado, dni, password, email FROM users WHERE email = $1", &[&email])
+        .await?;
+
+
+    let genero = row.get("genero");
+    let genero = Genero::from_str(genero)
+        .map_err(|e| DbError::Conversion(e))?;
+
+    Ok(UserDB {
+        id: row.get("id"),
+        nombre: row.get("nombre"),
+        edad: row.get("edad"),
+        genero: genero,
+        grado: row.get("grado"),
+        dni: row.get("dni"),
+        password: row.get("password"),
+        email: row.get("email"),
+    })
+}
+
+pub async fn get_user(user_id: i32, cliente: &Client) -> Result<UserDB, DbError>{
 
     let row = cliente
         .query_one("SELECT id, nombre, edad, genero, grado, dni, password, email FROM users WHERE id = $1", &[&user_id])
@@ -150,12 +168,10 @@ pub async fn get_user(user_id: i32, pool: &Pool) -> Result<UserDB, DbError>{
 }
 
 
-pub async fn get_all_users(pool: &Pool) -> Result<UsersList, DbError>{
-    let client = pool.get().await?;
-
+pub async fn get_all_users(cliente: &Client) -> Result<UsersList, DbError>{
     let mut vector_final = Vec::new();
 
-    let rows = client
+    let rows = cliente
         .query("SELECT id, nombre, edad, genero, grado, dni, password, email FROM users", &[])
         .await?;
 

@@ -2,7 +2,8 @@ use actix_web::{get, post, web, App, HttpServer, Responder, HttpRequest, HttpRes
 use deadpool_postgres::{Config as PoolConfig, Pool, ManagerConfig, RecyclingMethod, Client };
 use tokio_postgres::NoTls;
 //Uso mi libreria de sabre como provisional
-use sabre::database::{self, delete_chat, get_chat_by_id_and_user_id, get_table_columns, get_user_by_email, insert_chat, insert_user, setup_database, User};
+use db_lib::users_db::{get_user_by_email, delete_user};
+use db_lib::pool;
 use jsonwebtoken::{encode, Header, EncodingKey};
 use chrono::{Utc, Duration};
 use serde::{Deserialize, Serialize};
@@ -38,11 +39,13 @@ async fn login(
     body: web::Json<LoginRequest>,
     db: web::Data<Pool>,
 ) -> impl Responder {
+
+    println!("AUTH SERVICE");
     println!("Login request from: {:?}", req.peer_addr());
 
     match db.get().await {
         Ok(db_client) => {
-            match get_user_by_email(&db_client, &body.email).await {
+            match get_user_by_email(&body.email, &db_client).await {
                 Ok(usuario) => {
                     if usuario.password == body.password {
                         let expiration = Utc::now()
@@ -104,12 +107,12 @@ async fn main() -> std::io::Result<()> {
     println!("Auth Service");
     //Aca creariamos la config de la base de datos cfg
 
-    let pool = cfg.create_pool(Some(deadpool_postgres::Runtime::Tokio1), NoTls).unwrap();
-
-    if let Err(e) = setup_database(&pool).await {
-        eprintln!("Error al configurar la base de datos: {}", e);
-        std::process::exit(1);
-    }
+    let pool = pool::DbConfig{
+        db_name: "project_58_2".to_string(),
+        user: "rusty".to_string(),
+        password: "tototo".to_string(),
+        host: "localhost".to_string(),
+    };
     
     HttpServer::new(move || {
         App::new()
@@ -117,7 +120,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Cors::permissive())
             .service(login)
     })
-    .bind(("127.0.0.1", 9000))?
+    .bind(("127.0.0.1", 9002))?
     .run()
     .await
 }
