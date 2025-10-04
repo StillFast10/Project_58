@@ -3,7 +3,7 @@ from enum import Enum
 class Genero(Enum):
     MASCULINO = "Masculino"
     FEMENINO = "Femenino"
-    Joselito = "Joselito"
+    JOSELITO = "Joselito"
 
 class Usuario:
     def __init__(self, id: int, nombre: str, edad: int, genero: Genero,
