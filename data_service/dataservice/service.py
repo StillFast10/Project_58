@@ -9,7 +9,7 @@ class DataService:
             host="localhost",
             database="counterclock",
             user="postgres",       # tu usuario de PostgreSQL
-            password="Cartoslol2.4"
+            password="Cartoslol2.4" # recuerda que esto lo tienes que hacer con tu contra del PostgreSQL
         )
 
     def agregar_usuario(self, usuario: Usuario):
