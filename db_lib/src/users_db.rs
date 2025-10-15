@@ -32,9 +32,9 @@ impl FromStr for Genero{
 impl ToString for Genero {
     fn to_string(&self) -> String {
         match self {
-            Genero::Femenino => "femenino".to_string(),
-            Genero::Masculino => "masculino".to_string(),
-            Genero::Joselito => "joselito".to_string(),
+            Genero::Femenino => "Femenino".to_string(),
+            Genero::Masculino => "Masculino".to_string(),
+            Genero::Joselito => "Joselito".to_string(),
         }
     }
 }
@@ -48,18 +48,19 @@ pub struct UserDB{
     pub edad: i32,
     pub genero: Genero,
     pub grado: i32,
-    pub dni: i32,
+    pub dni: i64,
     pub password: String,
     pub email: String,
 }
 
 #[derive(Debug)]
 pub struct NewUser{
-    pub nombre: String,
+    pub nombres: String,
+    pub apellidos: String,
     pub edad: i32,
     pub genero: Genero,
     pub grado: i32,
-    pub dni: i32,
+    pub dni: i64,
     pub password: String,
     pub email: String,
 }
@@ -72,21 +73,37 @@ pub struct UsersList{
     pub cantidad_usuarios: usize,
 }
 
+pub async fn comprobar_email(email: &str, cliente: &Client) -> Result<bool, DbError>{
+    let stmt = "SELECT 1 FROM users WHERE email = $1 LIMIT 1";
+    let row = cliente.query_opt(stmt, &[&email]).await?;
+
+    Ok(row.is_some())
+}
+
+pub async fn comprobar_dni(dni: i64, cliente: &Client) -> Result<bool, DbError>{
+    let stmt = "SELECT 1 FROM users WHERE dni = $1 LIMIT 1";
+    let row = cliente.query_opt(stmt, &[&dni]).await?;
+
+    Ok(row.is_some())
+}
+
+
 pub async fn insert_user(usuario: NewUser, cliente: &Client) -> Result<UserDB, DbError>{
     //Esta funcion inserta un usuario en la base de datos y retorna un UserDB uwu
 
     let row = cliente
-        .query_one("INSERT INTO users (nombre, edad, genero, grado, dni, password, email)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        .query_one("INSERT INTO users (nombre, edad, genero, grado, dni, password, email, apellidos)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING id, nombre, edad, genero, grado, dni, password, email", 
         &[
-            &usuario.nombre,
+            &usuario.nombres,
             &usuario.edad,
             &usuario.genero.to_string(),
             &usuario.grado,
             &usuario.dni,
             &usuario.password,
-            &usuario.email
+            &usuario.email,
+            &usuario.apellidos
         ]
     ).await?;
 

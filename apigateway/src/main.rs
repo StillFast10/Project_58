@@ -75,6 +75,38 @@ async fn login(req: HttpRequest, body: String) -> impl Responder {
 }
 
 
+#[post("/signup")]
+async fn signup(req: HttpRequest, body: String) -> impl Responder {
+    println!("Signup request from: {:?}", req.peer_addr());
+    println!("Body received: {}", body);
+
+    let client = Client::new();
+
+    let resp = client
+        .post(format!("{}/signup", AUTH))
+        .header("Content-Type", "application/json")
+        .body(body)
+        .send()
+        .await;
+
+    match resp {
+        Ok(r) => {
+            println!("Response received from Auth service");
+            let status = r.status();
+            let mut client_resp = HttpResponse::build(status);
+
+            let text = r.text().await.unwrap_or_else(|_| "Error reading response".to_string());
+            client_resp.body(text)
+        }
+
+        Err(e) => {
+            HttpResponse::InternalServerError()
+                .body(format!("Error: {} al conectarse al servicio de Auth", e))
+        }
+    }
+}
+
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("APIGATEWAY RUNNING ON PORT 8080");
@@ -83,6 +115,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(Cors::permissive())
             .service(login)
+            .service(signup)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
